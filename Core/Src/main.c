@@ -78,17 +78,16 @@ void USB_VCP_ProcessData(void)
         int32_t pressure = ms5611_data.end_pres;
         int32_t temperature = ms5611_data.end_temp;
 
-        char buffer[100];
+        char buffer[50];
             int len = snprintf(buffer, sizeof(buffer), "Pressure: %ld mB, Temperature: %ld C\n", pressure, temperature);
 
+          
 
-
-                HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(len), HAL_MAX_DELAY);
-                HAL_Delay(1000);  // 1 second delay
-            //CDC_Transmit_FS((uint8_t*)buffer, len);
-
-        // USB VCP üzerinden veri gönder
-
+                 // Sıcaklık ve basınç verilerini gönder
+                 while (CDC_Transmit_FS((uint8_t*)buffer, len))
+                 {
+                     // USB meşgul, bekle
+                 }
 
     }
 
